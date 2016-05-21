@@ -7,9 +7,23 @@ import sys
 errlog = lambda msg: sys.stderr.write("{}\n".format(msg))
 
 
-def main(args):
-    filepath = os.path.join(os.path.expanduser('~'), 'Terms.json')
+def create_parser():
+
+	parser = argparse.ArgumentParser(
+        description="What's this for?\n Enter a term")
+	parser.add_argument("term", nargs="*")
+	
+	return parser
+    
+def process_args(args):
+    
     term_name = " ".join(args.term)
+    
+    return term_name
+
+def wtf(args):
+    filepath = os.path.join(os.path.expanduser('~'), 'Terms.json')
+    term_name = process_args(args)
 
     if os.path.isfile(filepath) and os.access(filepath, os.R_OK):
         try:
@@ -42,10 +56,6 @@ def main(args):
         exit(1)
 
 if "__main__" == __name__:
-    parser = argparse.ArgumentParser(
-        description="What's this for?\n Enter a term")
-    parser.add_argument("term", nargs="*")
+    args = create_parser().parse_args()
 
-    args = parser.parse_args()
-
-    main(args)
+    wtf(args)
